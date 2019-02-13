@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css" href="styles/style.css">
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -11,10 +12,11 @@
 <body style="font-size:20px; padding:50px; background-color: #f4f2ff;">
     <header>     <% include ./partials/_header %> </header>
         <br></br>
-    <table style="width:70%">
+    <table style="width:70%;" class="test">
             <tr>
               <th>Shortened URL</th>
               <th>Full URL</th> 
+              <th>Take an action</th> 
             </tr>
                 <% Object.keys(urls).forEach(function (prop) { %>
                     <tr>
@@ -22,6 +24,9 @@
                             <td>
                     <%= urls[prop] %>
                             </td>
+                            <td><form class="form-inline"  method="POST" action="/urls/<%= prop %>/delete">
+                              <button type="submit" class="btn btn-primary">Delete</button>
+                            </form></td>
                         </tr>
                 <% }) %>            
           </table>

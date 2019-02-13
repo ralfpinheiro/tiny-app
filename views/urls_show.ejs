@@ -6,9 +6,12 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
+    <section id="_wrapper">
+        <div id="_container">
     <header>     <% include ./partials/_header %> </header>
         <br></br>
     <table style=" width:70%;">
@@ -18,7 +21,7 @@
             </tr>
             <tr>
                 <td>
-                    <a href="/u/<%= shortURL%>"><%= shortURL %></a></td>
+                    <a href="/u/<%= shortURL%>" target="_blank"><%= shortURL %></a></td>
                 <td> <%= longURL %>
                     
                 </td>
@@ -27,6 +30,7 @@
           </table>
 
           <a style="cursor: pointer !important; position:relative; top: 100px; width: 300px; margin-top: 80px; left: 100px; padding:20px; background-color:#42f49e; !important; border:0px; border-radius: 50px;"  href="/urls/new"><span style="color:fff !important;">Create a new URL</span></a>
-
+        </div>
+        </section>
 </body>
 </html>
