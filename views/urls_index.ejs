@@ -3,8 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" type="text/css" href="styles/style.css">
-
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
@@ -24,6 +22,12 @@
                             <td>
                     <%= urls[prop] %>
                             </td>
+                            <td>
+                              <a href="/urls/<%= prop %>">Edit</a>
+                              <!-- <form class="form-inline"  method="POST" action="/urls/<%= prop %>">
+                              <button type="submit" class="btn btn-primary">Edit</button>
+                            </form> -->
+                          </td>
                             <td><form class="form-inline"  method="POST" action="/urls/<%= prop %>/delete">
                               <button type="submit" class="btn btn-primary">Delete</button>
                             </form></td>

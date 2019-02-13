@@ -10,8 +10,7 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-    <section id="_wrapper">
-        <div id="_container">
+    
     <header>     <% include ./partials/_header %> </header>
         <br></br>
     <table style=" width:70%;">
@@ -22,15 +21,18 @@
             <tr>
                 <td>
                     <a href="/u/<%= shortURL%>" target="_blank"><%= shortURL %></a></td>
-                <td> <%= longURL %>
-                    
-                </td>
+              
+                    <td><form class="form-inline"  method="POST" action="/urls/<%= shortURL%>">
+                      <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
+                      <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                  </td>
+            
             </tr>
             
           </table>
 
           <a style="cursor: pointer !important; position:relative; top: 100px; width: 300px; margin-top: 80px; left: 100px; padding:20px; background-color:#42f49e; !important; border:0px; border-radius: 50px;"  href="/urls/new"><span style="color:fff !important;">Create a new URL</span></a>
-        </div>
-        </section>
+          <a href="/urls">Back to to Index</a>
 </body>
 </html>

@@ -36,11 +36,21 @@ app.post("/urls", (req, res) => {
   urlDatabase[shortURL] = longURL;
   res.redirect("/urls/" + shortURL);
 });
+
+// Handles update of shortened urls
+app.post("/urls/:shortURL", (req, res) => {
+  var newLong = req.body.longURL;
+  urlDatabase[req.params.shortURL] = newLong;
+  res.redirect("/urls");
+});
+
 // Deletes url and redirects to index page
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete req.body.shortURL;
-  res.redirect("/urls/urls_index");
+  delete urlDatabase[req.params.shortURL];
+  res.redirect("/urls/");
 });
+
+// Edit an URL resource
 
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
