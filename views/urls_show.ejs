@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <title>TinyApp</title>
+</head>
+<body style="font-size:20px; padding:50px;">
+        <h1 style="color:#202020;">Enjoy the short version :) !</h1>
+        <br></br>
+    <table style=" width:70%;">
+            <tr>
+              <th>Shortened URL</th>
+              <th>Full URL</th> 
+            </tr>
+            <tr>
+                <td><%= shortURL %></td>
+                <td> <%= longURL %>
+                    
+                </td>
+            </tr>
+            
+          </table>
+
+          <button style="cursor: pointer !important; position:relative; width: 300px; margin-top: 80px; left: 100px; padding:20px; background-color:#42f49e; !important; border:0px; border-radius: 50px;" type="button" href="#" onclick="alert('App still in development phase')"><span style="color:fff !important;">Create New URL</span></button>
+
+</body>
+</html>
