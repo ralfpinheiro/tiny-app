@@ -31,23 +31,34 @@ app.get("/urls", (req, res) => {
 
 app.post("/urls", (req, res) => {
     // console.log(req.body);  // Log the POST request body to the console
-    var short = generateRandomString();
-    var long = req.body.longURL;
-    urlDatabase[short] = long; 
-    console.log(urlDatabase);
-    res.redirect('/urls/' + short);         // Respond with 'Ok' (we will replace this)
+    var shortURL = generateRandomString();
+    var longURL =  req.body.longURL;
+    urlDatabase[shortURL] = longURL; 
+    
+    res.redirect('/urls/' + shortURL); 
   });
 
 app.get("/urls/new", (req, res) => {
     res.render("urls_new");
   });
 
+  app.get("/u/:shortURL", (req, res) => {
+    //var shortURL = generateRandomString();
+    var shortURL =  req.params.shortURL;
+    var longURL = urlDatabase[shortURL];
+
+    if(!longURL.startsWith('http://')) {
+        longURL = 'http://' + longURL;
+    }
+    res.redirect(longURL);
+  });
+
+
+
 app.get("/urls/:shortURL", (req, res) => {
     let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
     res.render("urls_show", templateVars);
   });
-
-  
 
 app.get("/urls.json", (req, res) => {
     res.json(urlDatabase);
