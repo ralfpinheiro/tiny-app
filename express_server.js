@@ -7,11 +7,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
 function generateRandomString() {
-    var newURL = crypto.randomBytes(4).toString('hex');
+    var newURL = crypto.randomBytes(3).toString('hex');
     return newURL;
 }
-
-generateRandomString();
 
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -32,8 +30,12 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-    console.log(req.body);  // Log the POST request body to the console
-    res.send("Ok");         // Respond with 'Ok' (we will replace this)
+    // console.log(req.body);  // Log the POST request body to the console
+    var short = generateRandomString();
+    var long = req.body.longURL;
+    urlDatabase[short] = long; 
+    console.log(urlDatabase);
+    res.redirect('/urls/' + short);         // Respond with 'Ok' (we will replace this)
   });
 
 app.get("/urls/new", (req, res) => {
