@@ -1,0 +1,110 @@
+body {
+  margin: 0 !important;
+  background-color: rgb(250, 245, 255) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-family: "Source Sans Pro", sans-serif !important;
+}
+
+button,
+a {
+  font-family: "Source Sans Pro", sans-serif !important;
+  font-size: 17px !important;
+  cursor: pointer !important;
+  position: relative;
+  padding: 12px 30px !important;
+  background-color: rgba(73, 247, 163, 0.969) !important;
+  border: 0px !important;
+  border-radius: 50px !important;
+  color: #007bff !important;
+  -webkit-box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+  box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+  text-decoration: none !important;
+  transition: all 0.2s;
+}
+
+button:hover,
+a:hover {
+  background-color: rgba(73, 247, 163, 0.8) !important;
+}
+
+.login {
+  padding: 8px !important;
+  border: 0px !important;
+  -webkit-box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+  box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+}
+
+#_bottom_nav {
+  margin-top: 60px !important;
+}
+
+input {
+  border-top-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important;
+}
+
+input::placeholder {
+  font-size: 14px !important;
+  padding-left: 10px !important;
+}
+
+table {
+  background: #f9f9f9 !important;
+  border: solid 1px #eaeaea;
+  margin-top: 30px !important;
+  -webkit-box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+  box-shadow: -2px 4px 36px -8px rgba(0, 0, 0, 0.3);
+}
+
+#_table row {
+}
+
+#_table th {
+  background-color: #f1f1f1;
+  padding: 20px 25px;
+  border-bottom-width: 1px;
+  border-bottom-color: #eaeaea;
+  border-bottom-style: solid;
+}
+
+#_table td {
+  padding: 30px 35px;
+  border-bottom-width: 1px;
+  border-bottom-color: #eaeaea;
+  border-bottom-style: solid;
+}
+
+#form_button button {
+  background-color: #1d211f !important;
+}
+
+#_header {
+}
+
+#_wrapper {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#_container {
+  width: auto;
+}

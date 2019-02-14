@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,900" rel="stylesheet">  <link rel="stylesheet" href="/style.css" />
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   
@@ -13,26 +13,27 @@
     
     <header>     <% include ./partials/_header %> </header>
         <br></br>
-    <table style=" width:70%;">
+    <table id="_table" style=" width:70%;">
             <tr>
               <th>Shortened URL</th>
-              <th>Full URL</th> 
+              <th>Update</th> 
             </tr>
             <tr>
                 <td>
-                    <a href="/u/<%= shortURL%>" target="_blank"><%= shortURL %></a></td>
+                    <a href="/u/<%= shortURL %>" target="_blank"><%= shortURL %></a></td>
               
                     <td><form class="form-inline"  method="POST" action="/urls/<%= shortURL%>">
-                      <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
-                      <button type="submit" class="btn btn-primary">Update</button>
+                      <input class="login" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
+                      <button style="border-top-left-radius:0px !important; border-bottom-left-radius: 0px !important; margin-left: -20px;" type="submit">Update</button>
                     </form>
                   </td>
             
             </tr>
             
           </table>
-
-          <a style="cursor: pointer !important; position:relative; top: 100px; width: 300px; margin-top: 80px; left: 100px; padding:20px; background-color:#42f49e; !important; border:0px; border-radius: 50px;"  href="/urls/new"><span style="color:fff !important;">Create a new URL</span></a>
-          <a href="/urls">Back to to Index</a>
+        <div id="_bottom_nav">
+          <a style=""  href="/urls/new"><span>Create a new URL</span></a>
+          <a style="margin-left:30px !important; href="/urls">Back to to Index</a>
+        </div>
 </body>
 </html>

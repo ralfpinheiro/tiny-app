@@ -2,29 +2,66 @@ var express = require("express");
 var app = express();
 var crypto = require("crypto");
 var PORT = 8080; // default port 8080
-const bodyParser = require("body-parser");
-var cookieParser = require("cookie-parser");
 
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+
+app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.set("view engine", "ejs");
 
-function generateRandomString() {
-  var newURL = crypto.randomBytes(3).toString("hex");
+function generateUrl() {
+  const newURL = crypto.randomBytes(3).toString("hex");
   return newURL;
 }
 
-var urlDatabase = {
+function generateUserId() {
+  const newUserId = crypto.randomBytes(2).toString("hex");
+  return newUserId;
+}
+
+// Users Database
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
+// URLs Database
+const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
+// Generates a cookie with new user ID and sends and validate if fom is filled
+app.post("/register", (req, res) => {
+  var userId = generateUserId();
+  var email = req.body.email;
+  var password = req.body.password;
+  users[userId] = { id: userId, email: email, password: password };
+  if (email === "" || password === "") {
+    res.sendStatus(404);
+  }
+  res.cookie("registration", users[userId]);
+  res.redirect("/urls");
+  console.log(users);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+app.get("/register", (req, res) => {
+  var templateVars = {};
+  res.render("register", templateVars);
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello!");
 });
 
 // Handles the login form submission
@@ -35,15 +72,13 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  console.log;
   var templateVars = { urls: urlDatabase, username: req.cookies["user"] };
   res.render("urls_index", templateVars);
 });
 
 //Handles the creation of a new short url and links it to the full URL'
 app.post("/urls", (req, res) => {
-  // console.log(req.body);  // Log the POST request body to the console
-  var shortURL = generateRandomString();
+  var shortURL = generateUrl();
   var longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
   res.redirect("/urls/" + shortURL);
@@ -70,7 +105,6 @@ app.get("/urls/new", (req, res) => {
 });
 
 // Handles the logout
-
 app.post("/logout", (req, res) => {
   res.clearCookie("user");
   res.redirect("/urls/");

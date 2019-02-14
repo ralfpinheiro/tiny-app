@@ -4,17 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- Bootstrap CSS -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,900" rel="stylesheet"><link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  
   <title>TinyApp</title>
 </head>
-<body style="font-size:20px; padding:50px; background-color: #f4f2ff;">
+<body style="font-size:20px; padding:50px;">
+    <section id="_warpper">
+      <div id="container">
     <header>     <% include ./partials/_header %> </header>
         <br></br>
-    <table style="width:70%;" class="test">
+    <table id="_table" style="width:80%;">
             <tr>
               <th>Shortened URL </th>
               <th>Full URL</th> 
               <th>Take an action</th> 
+              <th style="color:rgba(52, 51, 51, 0.975)">Danger</th> 
             </tr>
                 <% Object.keys(urls).forEach(function (prop) { %>
                     <tr>
@@ -29,14 +34,15 @@
                             </form> -->
                           </td>
                             <td><form class="form-inline"  method="POST" action="/urls/<%= prop %>/delete">
-                              <button type="submit" class="btn btn-primary">Delete</button>
+                              <button type="submit" >Delete</button>
                             </form></td>
                         </tr>
                 <% }) %>            
           </table>
 
-          <a style="cursor: pointer !important; position:relative; top: 100px; width: 300px; margin-top: 80px; left: 100px; padding:20px; background-color:#42f49e; !important; border:0px; border-radius: 50px;"  href="/urls/new"><span style="color:fff !important;">Make it Short</span></a>
-
-
+          <a style="position: relative; top: 50px; margin-left:35px;" href="/urls/new">Make it Short</a>
+        </div>
+      </br></br>
+        </section>
 </body>
 </html>
