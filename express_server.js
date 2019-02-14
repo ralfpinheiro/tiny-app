@@ -41,20 +41,32 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// Checks if registered email is already in database
+
 // Generates a cookie with new user ID and sends and validate if fom is filled
 app.post("/register", (req, res) => {
   var userId = generateUserId();
   var email = req.body.email;
   var password = req.body.password;
-  users[userId] = { id: userId, email: email, password: password };
-  if (email === "" || password === "") {
-    res.sendStatus(404);
+  // Checks if the registtration email already exists in the database
+  const checkEmail = function(email) {
+    for (var i in users) {
+      var userKey = users[i].email;
+      if (email === userKey) {
+        return true;
+      }
+    }
+  };
+  if (checkEmail(email) || (email === "" || password === "")) {
+    res.sendStatus(400);
+  } else {
+    users[userId] = { id: userId, email: email, password: password };
+    res.cookie("registration", users[userId]);
+    res.redirect("/urls");
   }
-  res.cookie("registration", users[userId]);
-  res.redirect("/urls");
-  console.log(users);
 });
 
+// Renders the registration page
 app.get("/register", (req, res) => {
   var templateVars = {};
   res.render("register", templateVars);
@@ -72,7 +84,7 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  var templateVars = { urls: urlDatabase, username: req.cookies["user"] };
+  var templateVars = { urls: urlDatabase, id: req.cookies["registration"] };
   res.render("urls_index", templateVars);
 });
 
@@ -99,21 +111,21 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // Edit an URL resource
 app.get("/urls/new", (req, res) => {
-  var templateVars = { username: req.cookies["user"] };
+  var templateVars = { id: req.cookies["registration"] };
 
   res.render("urls_new", templateVars);
 });
 
 // Handles the logout
 app.post("/logout", (req, res) => {
-  res.clearCookie("user");
+  res.clearCookie("registration");
   res.redirect("/urls/");
 });
 
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
   var longURL = urlDatabase[shortURL];
-  var templateVars = { username: req.cookies["user"] };
+  var templateVars = { id: req.cookies["registration"] };
   if (!longURL.startsWith("http://")) {
     longURL = "http://" + longURL;
   }
@@ -124,7 +136,7 @@ app.get("/urls/:shortURL", (req, res) => {
   var templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["user"]
+    id: req.cookies["registration"]
   };
   res.render("urls_show", templateVars);
 });
