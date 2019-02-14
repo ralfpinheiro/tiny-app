@@ -3,7 +3,10 @@ var app = express();
 var crypto = require("crypto");
 var PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
+
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.set("view engine", "ejs");
 
 function generateRandomString() {
@@ -24,11 +27,20 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+// Handles the login form submission
+app.post("/login", (req, res) => {
+  var userName = req.body.username;
+  res.cookie("user", userName);
+  res.redirect("/urls");
+});
+
 app.get("/urls", (req, res) => {
-  var templateVars = { urls: urlDatabase };
+  console.log;
+  var templateVars = { urls: urlDatabase, username: req.cookies["user"] };
   res.render("urls_index", templateVars);
 });
 
+//Handles the creation of a new short url and links it to the full URL'
 app.post("/urls", (req, res) => {
   // console.log(req.body);  // Log the POST request body to the console
   var shortURL = generateRandomString();
@@ -51,23 +63,35 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 // Edit an URL resource
-
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  var templateVars = { username: req.cookies["user"] };
+
+  res.render("urls_new", templateVars);
+});
+
+// Handles the logout
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("user");
+  res.redirect("/urls/");
 });
 
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
   var longURL = urlDatabase[shortURL];
-
+  var templateVars = { username: req.cookies["user"] };
   if (!longURL.startsWith("http://")) {
     longURL = "http://" + longURL;
   }
-  res.redirect(longURL);
+  res.redirect(longURL, templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  var templateVars = {
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL],
+    username: req.cookies["user"]
+  };
   res.render("urls_show", templateVars);
 });
 
