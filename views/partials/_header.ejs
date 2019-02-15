@@ -20,9 +20,11 @@
     method="POST" action="/logout">
     <button type="submit">Logout</button>
     <% } else { %>
-    <a href="/login">Login</a>
+    <div style="position: absolute; top:40px; right:40px; ">
+      <a href="/login">Login</a>
 
-    <a href="/register">Register</a>
+      <a href="/register">Register</a>
+    </div>
     <% } %>
   </body>
 </html>

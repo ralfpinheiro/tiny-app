@@ -91,7 +91,6 @@ app.get("/", (req, res) => {
 
 // Handles the login form submission
 app.post("/login", (req, res) => {
-  // var userName = req.body.username;
   var email = req.body.email;
   var password = req.body.password;
   var templateVars = { id: req.cookies["registration"], email: req.body.email };
@@ -103,8 +102,10 @@ app.post("/login", (req, res) => {
         " or " +
         ' <a href="/register/">Register</a>'
     );
+    // res.sendStatus(403);
   } else if (!checkPassword(password)) {
     res.send("Invalid or password" + '</br></br><a href="/login">Go Back</a> ');
+    // res.sendStatus(403);
   } else {
     res.cookie("registration", templateVars);
 
