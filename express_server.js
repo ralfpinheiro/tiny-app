@@ -42,21 +42,34 @@ const urlDatabase = {
 };
 
 // Checks if registered email is already in database
-
+const checkEmail = function(email) {
+  for (var i in users) {
+    var userKey = users[i].email;
+    if (email === userKey) {
+      return true;
+    } else {
+      false;
+    }
+  }
+};
+// Checks if registered password is already in database
+const checkPassword = function(password) {
+  for (var i in users) {
+    var userKey = users[i].password;
+    if (password === userKey) {
+      return true;
+    } else {
+      false;
+    }
+  }
+};
 // Generates a cookie with new user ID and sends and validate if fom is filled
 app.post("/register", (req, res) => {
   var userId = generateUserId();
   var email = req.body.email;
   var password = req.body.password;
+
   // Checks if the registtration email already exists in the database
-  const checkEmail = function(email) {
-    for (var i in users) {
-      var userKey = users[i].email;
-      if (email === userKey) {
-        return true;
-      }
-    }
-  };
   if (checkEmail(email) || (email === "" || password === "")) {
     res.sendStatus(400);
   } else {
@@ -78,9 +91,29 @@ app.get("/", (req, res) => {
 
 // Handles the login form submission
 app.post("/login", (req, res) => {
-  var userName = req.body.username;
-  res.cookie("user", userName);
-  res.redirect("/urls");
+  // var userName = req.body.username;
+  var email = req.body.email;
+  var password = req.body.password;
+  var templateVars = { id: req.cookies["registration"], email: req.body.email };
+
+  if (!checkEmail(email)) {
+    res.send(
+      "User not found, please register" +
+        '</br></br><a href="/login">Go Back</a> ' +
+        " or " +
+        ' <a href="/register/">Register</a>'
+    );
+  } else if (!checkPassword(password)) {
+    res.send("Invalid or password" + '</br></br><a href="/login">Go Back</a> ');
+  } else {
+    res.cookie("registration", templateVars);
+
+    res.redirect("/urls");
+  }
+});
+
+app.get("/login", (req, res) => {
+  res.render("login");
 });
 
 app.get("/urls", (req, res) => {

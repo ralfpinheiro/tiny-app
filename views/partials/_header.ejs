@@ -13,7 +13,21 @@
         >Tiny<span style="font-weight:400 !important;">App</span></strong
       >
     </h1>
-    <% if(id){ %>
+    <% if(id) {%>
+    <h3>Hi <%= id.email %></h3>
+
+    <form style="float: right !important; margin-top:-20px !important; id="form_button" class="form-inline"
+    method="POST" action="/logout">
+    <button type="submit">Logout</button>
+    <% } else { %>
+    <a href="/login">Login</a>
+
+    <a href="/register">Register</a>
+    <% } %>
+  </body>
+</html>
+
+<!-- <% if(id){ %>
     <p>Hello <%= id.email %></p>
     <form style="float: right !important; margin-top:-20px !important; id="form_button" class="form-inline" method="POST" action="/logout">
       <button type="submit">Logout</button>
@@ -29,6 +43,4 @@
         Login
       </button>
     </form>
-    <% } %>
-  </body>
-</html>
+    <% } %> -->
