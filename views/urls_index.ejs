@@ -21,21 +21,14 @@
               <th>Take an action</th> 
               <th style="color:rgba(52, 51, 51, 0.975)">Danger</th> 
             </tr>
-                <% Object.keys(urls).forEach(function (prop) { %>
+                <% Object.keys(urls).forEach(function (key) { %>
                     <tr>
-                        <td><%= prop %></td>
-                            <td>
-                    <%= urls[prop] %>
-                            </td>
-                            <td>
-                              <a href="/urls/<%= prop %>">Edit</a>
-                              <!-- <form class="form-inline"  method="POST" action="/urls/<%= prop %>">
-                              <button type="submit" class="btn btn-primary">Edit</button>
-                            </form> -->
-                          </td>
-                            <td><form class="form-inline"  method="POST" action="/urls/<%= prop %>/delete">
-                              <button type="submit" >Delete</button>
-                            </form></td>
+                        <td><%= key %></td>
+                        <td><%= urls[key].longURL %></td>
+                        <td><a href="/urls/<%= key %>">Edit</a></td>
+                        <td><form class="form-inline"  method="POST" action="/urls/<%= key %>/delete">
+                          <button type="submit" >Delete</button>
+                        </form></td>     
                         </tr>
                 <% }) %>            
           </table>
