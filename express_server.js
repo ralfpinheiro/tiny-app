@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var crypto = require("crypto");
 var PORT = 8080; // default port 8080
-
+const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
@@ -11,29 +11,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.set("view engine", "ejs");
 
+// Genetares new Url
 function generateUrl() {
   const newURL = crypto.randomBytes(3).toString("hex");
   return newURL;
 }
-
+// Generate User Id
 function generateUserId() {
   const newUserId = crypto.randomBytes(2).toString("hex");
   return newUserId;
 }
+// Gets User Id
+function getCurrentUser(id) {
+  return users[id];
+}
 
 // Users Database
-var users = {
-  userRandomID: {
-    id: "1",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
-  user2RandomID: {
-    id: "2",
-    email: "user2@example.com",
-    password: "2"
-  }
-};
+var users = {};
 
 // URLs Database
 var urlDatabase = {
@@ -43,9 +37,11 @@ var urlDatabase = {
 
 //get authenticated user
 function authenticate(givenEmail, givenPassword) {
-  for (aUser in users) {
-    if (users[aUser].email === givenEmail && users[aUser].password === givenPassword) {
-      return users[aUser];
+  for (var aUser in users) {
+    var userExists = users[aUser].email === givenEmail;
+    var passwordExists = bcrypt.compareSync(givenPassword, users[aUser].password);
+    if (userExists && passwordExists) {
+      return users[aUser].id;
     }
   }
   return false;
@@ -56,17 +52,19 @@ app.post("/register", (req, res) => {
   var userId = generateUserId();
   var email = req.body.email;
   var password = req.body.password;
+  var hashedPassword = bcrypt.hashSync(password, 10);
   // Checks for empty email or passowrd
   if (email === "" || password === "") {
     res.sendStatus(400);
   } else {
-    var newUser = { id: userId, email: email, password: password };
+    var newUser = { id: userId, email: email, password: hashedPassword };
     // Creates new user profile and creates a cookie
     users[userId] = {
+      id: userId,
       email: email,
-      password: password
+      password: hashedPassword
     };
-    res.cookie("registration", newUser);
+    res.cookie("registration", userId);
     res.redirect("/urls");
   }
 });
@@ -93,18 +91,18 @@ app.post("/login", (req, res) => {
     res.redirect("/urls");
   }
 });
-
+// Renders login page
 app.get("/login", (req, res) => {
   res.render("login");
 });
 
 app.get("/urls", (req, res) => {
-  var templateVars = { urls: urlDatabase, id: req.cookies["registration"] };
+  var templateVars = { urls: urlDatabase, id: getCurrentUser(req.cookies["registration"]) };
   var urlsOfUser = {};
   //loop through urlDatabase and if the userId = req.cookies["registration"], add it to the list
   for (let key in urlDatabase) {
     if (templateVars.id) {
-      if (urlDatabase[key].userID === req.cookies["registration"].id) {
+      if (urlDatabase[key].userID === req.cookies["registration"]) {
         urlsOfUser[key] = urlDatabase[key];
       }
     }
@@ -127,8 +125,8 @@ app.post("/urls", (req, res) => {
 
 // Handles update of shortened urls
 app.post("/urls/:shortURL", (req, res) => {
-  var currentUser = { id: req.cookies["registration"] };
-  if (!authenticate(currentUser.email, currentUser.password)) {
+  var currentUser = getCurrentUser(req.cookies["registration"]);
+  if (!currentUser) {
     res.sendStatus(403);
   } else {
     var newLong = req.body.longURL;
@@ -139,8 +137,8 @@ app.post("/urls/:shortURL", (req, res) => {
 
 // Deletes url and redirects to index page
 app.post("/urls/:shortURL/delete", (req, res) => {
-  var currentUser = { id: req.cookies["registration"] };
-  if (!authenticate(currentUser.email, currentUser.password)) {
+  var currentUser = getCurrentUser(req.cookies["registration"]);
+  if (!currentUser) {
     res.sendStatus(403);
   } else {
     delete urlDatabase[req.params.shortURL];
@@ -150,7 +148,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // Permission to Edit an URL resource
 app.get("/urls/new", (req, res) => {
-  var templateVars = { urls: urlDatabase, id: req.cookies["registration"] };
+  var templateVars = { urls: urlDatabase, id: getCurrentUser(req.cookies["registration"]) };
   if (!templateVars.id) {
     res.redirect("/login");
   } else {
@@ -167,7 +165,7 @@ app.post("/logout", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
   var longURL = urlDatabase[shortURL].longURL;
-  var templateVars = { id: req.cookies["registration"] };
+
   if (!longURL.startsWith("http://")) {
     longURL = "http://" + longURL;
   }
@@ -178,18 +176,9 @@ app.get("/urls/:shortURL", (req, res) => {
   var templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    id: req.cookies["registration"]
+    id: getCurrentUser(req.cookies["registration"])
   };
   res.render("urls_show", templateVars);
-});
-
-app.get("/u/:shortURL", (req, res) => {
-  // var templateVars = {
-  //   shortURL: req.params.shortURL,
-  //   longURL: urlDatabase[req.params.shortURL],
-  //   id: req.cookies["registration"]
-  // };
-  // res.render("urls_show", templateVars);
 });
 
 app.get("/urls.json", (req, res) => {
