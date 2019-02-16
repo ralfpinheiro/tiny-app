@@ -4,12 +4,20 @@ var crypto = require("crypto");
 var PORT = 8080; // default port 8080
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
+var cookieSession = require("cookie-session");
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.set("view engine", "ejs");
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["1", "2"],
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  })
+);
 
 // Genetares new Url
 function generateUrl() {
@@ -64,7 +72,8 @@ app.post("/register", (req, res) => {
       email: email,
       password: hashedPassword
     };
-    res.cookie("registration", userId);
+    // res.cookie("registration", userId);
+    req.session.userId = userId;
     res.redirect("/urls");
   }
 });
@@ -87,7 +96,8 @@ app.post("/login", (req, res) => {
   if (!authenticated) {
     res.redirect("/register"); // res.sendStatus(403);
   } else {
-    res.cookie("registration", authenticated);
+    // res.cookie("registration", authenticated);
+    req.session.userId = authenticated;
     res.redirect("/urls");
   }
 });
@@ -97,12 +107,12 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  var templateVars = { urls: urlDatabase, id: getCurrentUser(req.cookies["registration"]) };
+  var templateVars = { urls: urlDatabase, id: getCurrentUser(req.session.userId) };
   var urlsOfUser = {};
   //loop through urlDatabase and if the userId = req.cookies["registration"], add it to the list
   for (let key in urlDatabase) {
     if (templateVars.id) {
-      if (urlDatabase[key].userID === req.cookies["registration"]) {
+      if (urlDatabase[key].userID === req.session.userId) {
         urlsOfUser[key] = urlDatabase[key];
       }
     }
@@ -115,7 +125,7 @@ app.get("/urls", (req, res) => {
 app.post("/urls", (req, res) => {
   var shortURL = generateUrl();
   var longURL = req.body.longURL;
-  var userID = req.cookies["registration"].id; // UserID is an object with user profile
+  var userID = req.session.userId; // .id  UserID is an object with user profile
   urlDatabase[shortURL] = {
     longURL: longURL,
     userID: userID
@@ -125,7 +135,7 @@ app.post("/urls", (req, res) => {
 
 // Handles update of shortened urls
 app.post("/urls/:shortURL", (req, res) => {
-  var currentUser = getCurrentUser(req.cookies["registration"]);
+  var currentUser = getCurrentUser(req.session.userId);
   if (!currentUser) {
     res.sendStatus(403);
   } else {
@@ -137,7 +147,7 @@ app.post("/urls/:shortURL", (req, res) => {
 
 // Deletes url and redirects to index page
 app.post("/urls/:shortURL/delete", (req, res) => {
-  var currentUser = getCurrentUser(req.cookies["registration"]);
+  var currentUser = getCurrentUser(req.session.userId);
   if (!currentUser) {
     res.sendStatus(403);
   } else {
@@ -148,7 +158,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // Permission to Edit an URL resource
 app.get("/urls/new", (req, res) => {
-  var templateVars = { urls: urlDatabase, id: getCurrentUser(req.cookies["registration"]) };
+  var templateVars = { urls: urlDatabase, id: getCurrentUser(req.session.userId) };
   if (!templateVars.id) {
     res.redirect("/login");
   } else {
@@ -158,10 +168,10 @@ app.get("/urls/new", (req, res) => {
 
 // Handles the logout
 app.post("/logout", (req, res) => {
-  res.clearCookie("registration");
+  req.session = null;
   res.redirect("/urls/");
 });
-
+// Get request for /u/:ShortURL - (Authentication-free page)
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
   var longURL = urlDatabase[shortURL].longURL;
@@ -171,12 +181,12 @@ app.get("/u/:shortURL", (req, res) => {
   }
   res.redirect(longURL);
 });
-
+// Get request for (Page Authentication)
 app.get("/urls/:shortURL", (req, res) => {
   var templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    id: getCurrentUser(req.cookies["registration"])
+    id: getCurrentUser(req.session.userId)
   };
   res.render("urls_show", templateVars);
 });
