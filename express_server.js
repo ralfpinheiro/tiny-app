@@ -2,14 +2,12 @@ var express = require("express");
 var app = express();
 var crypto = require("crypto");
 var PORT = 8080; // default port 8080
+var cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
-// const cookieParser = require("cookie-parser");
-var cookieSession = require("cookie-session");
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cookieParser());
 app.set("view engine", "ejs");
 app.use(
   cookieSession({
@@ -33,10 +31,8 @@ function generateUserId() {
 function getCurrentUser(id) {
   return users[id];
 }
-
 // Users Database
 var users = {};
-
 // URLs Database
 var urlDatabase = {
   b2xVn2: { longURL: "http://www.lighthouselabs.ca", userID: "1" },
@@ -63,7 +59,8 @@ app.post("/register", (req, res) => {
   var hashedPassword = bcrypt.hashSync(password, 10);
   // Checks for empty email or passowrd
   if (email === "" || password === "") {
-    res.sendStatus(400);
+    // res.sendStatus(400);
+    res.redirect("/register");
   } else {
     var newUser = { id: userId, email: email, password: hashedPassword };
     // Creates new user profile and creates a cookie
@@ -72,7 +69,6 @@ app.post("/register", (req, res) => {
       email: email,
       password: hashedPassword
     };
-    // res.cookie("registration", userId);
     req.session.userId = userId;
     res.redirect("/urls");
   }
@@ -101,6 +97,7 @@ app.post("/login", (req, res) => {
     res.redirect("/urls");
   }
 });
+
 // Renders login page
 app.get("/login", (req, res) => {
   res.render("login");
@@ -109,7 +106,6 @@ app.get("/login", (req, res) => {
 app.get("/urls", (req, res) => {
   var templateVars = { urls: urlDatabase, id: getCurrentUser(req.session.userId) };
   var urlsOfUser = {};
-  //loop through urlDatabase and if the userId = req.cookies["registration"], add it to the list
   for (let key in urlDatabase) {
     if (templateVars.id) {
       if (urlDatabase[key].userID === req.session.userId) {
@@ -171,16 +167,17 @@ app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect("/urls/");
 });
+
 // Get request for /u/:ShortURL - (Authentication-free page)
 app.get("/u/:shortURL", (req, res) => {
   var shortURL = req.params.shortURL;
   var longURL = urlDatabase[shortURL].longURL;
-
   if (!longURL.startsWith("http://")) {
     longURL = "http://" + longURL;
   }
   res.redirect(longURL);
 });
+
 // Get request for (Page Authentication)
 app.get("/urls/:shortURL", (req, res) => {
   var templateVars = {

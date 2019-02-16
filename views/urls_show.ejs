@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,900" rel="stylesheet">  <link rel="stylesheet" href="/style.css" />
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  
-  <title>TinyApp</title>
-</head>
-<body style="font-size:20px; padding:50px;">
-    
-    <header>     <% include ./partials/_header %> </header>
-        <br></br>
-    <table id="_table" style=" width:70%;">
-            <tr>
-              <th>Shortened URL</th>
-              <th>Update</th> 
-            </tr>
-            <tr>
-                <td>
-                    <a href="/u/<%= shortURL %>" target="_blank"><%= shortURL %></a></td>
-                    <td><form class="form-inline"  method="POST" action="/urls/<%= shortURL %>">
-                      <input class="login" type="text" name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
-                      <button style="border-top-left-radius:0px !important; border-bottom-left-radius: 0px !important; margin-left: -20px;" type="submit">Update</button>
-                    </form>
-                  </td>
-            
-            </tr>
-            
-          </table>
-        <div id="_bottom_nav">
-          <a href="/urls/new"><span>Create a new URL</span></a>
-          <a href="/urls">Back to to Index</a>
-        </div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,900" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
+
+    <title>TinyApp</title>
+  </head>
+  <body style="font-size:20px; padding:50px;">
+    <header><% include ./partials/_header %></header>
+    <section id="_parent">
+      <div style="height: auto !important;" id="_child">
+        <table id="_table">
+          <tr>
+            <th style="width:27%;">Shortened URL</th>
+            <th><span style="padding-left:50px;  color: #007bff;">Enter new URL</span></th>
+          </tr>
+          <tr>
+            <td>
+              <a href="/u/<%= shortURL %>" target="_blank"><%= shortURL %></a>
+            </td>
+            <td>
+              <form class="form-inline" method="POST" action="/urls/<%= shortURL %>">
+                <input
+                  class="login"
+                  type="text"
+                  name="longURL"
+                  placeholder="http://"
+                  style="width: 300px; margin: 1em"
+                />
+                <button
+                  style="border-top-left-radius:0px !important; border-bottom-left-radius: 0px !important; margin-left: -50px;"
+                  type="submit"
+                >
+                  Update
+                </button>
+              </form>
+            </td>
+          </tr>
+        </table>
+
+        <aside id="_bottom_nav">
+          <a style="margin-left:5px;" href="/urls/new"><span>Create a new URL</span></a>
+          <a style="margin-left:35px;" href="/urls">Back to to Index</a>
+        </aside>
+      </div>
+    </section>
+  </body>
 </html>

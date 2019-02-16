@@ -8,20 +8,16 @@
     <title>TinyApp</title>
   </head>
   <body>
-    <h1 style="font-family: 'Source Sans Pro', sans-serif;">TinyApp</h1>
+    <h1 id="logo">TinyApp</h1>
     <% if(id) {%>
-    <h3>Hi <%= id.email %></h3>
+    <h3 class="head3">Logged as <%= id.email %></h3>
+    <form class="form-inline" method="POST" action="/logout">
+      <button id="_logout_btn" type="submit">Logout</button>
+      <% } else { %>
+      <a id="_login_btn" href="/login">Login</a>
+      <a id="_register_btn" href="/register">Register</a>
 
-    <form style="float: right !important; margin-top:-20px !important; id="form_button" class="form-inline"
-    method="POST" action="/logout">
-    <button type="submit">Logout</button>
-    <% } else { %>
-
-      <a href="/login">Login</a>
-
-      <a href="/register">Register</a>
-    
-    <% } %>
+      <% } %>
     </form>
   </body>
 </html>

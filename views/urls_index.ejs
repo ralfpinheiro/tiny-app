@@ -10,32 +10,37 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-    <section id="_warpper">
-      <div id="container">
     <header>     <% include ./partials/_header %> </header>
-        <br></br>
-    <table id="_table" style="width:80%;">
+    <section id="_parent">
+        <div id="_child">
+    <table id="_table" style="width:100%;">
+            
+        <% Object.keys(urls).forEach(function (key) { %>
             <tr>
               <th>Shortened URL </th>
               <th>Full URL</th> 
               <th>Take an action</th> 
-              <th style="color:rgba(52, 51, 51, 0.975)">Danger</th> 
+              <th style="color: #007bff;">Danger Zone</th> 
             </tr>
-                <% Object.keys(urls).forEach(function (key) { %>
-                    <tr>
+            
+            <tr>
                         <td><%= key %></td>
                         <td><%= urls[key].longURL %></td>
-                        <td><a href="/urls/<%= key %>">Edit</a></td>
+                        <td><a class="_edit_btn" href="/urls/<%= key %>">Edit</a></td>
                         <td><form class="form-inline"  method="POST" action="/urls/<%= key %>/delete">
-                          <button type="submit" >Delete</button>
+                          <button class="_edit_btn" type="submit" >Delete</button>
+                        </tr>
                         </form></td>     
                         </tr>
                 <% }) %>            
           </table>
-
-          <a style="position: relative; top: 50px; margin-left:35px;" href="/urls/new">Make it Short</a>
+          <asiden class="_shorten_parent">
+<div class="_shorten_btn">
+    <a  id="_shorten_btn" href="/urls/new">Shorten my URLS</a>
+</div>
+</aside>
+        
         </div>
-      </br></br>
         </section>
 </body>
 </html>
