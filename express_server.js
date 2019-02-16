@@ -94,9 +94,9 @@ app.post("/login", (req, res) => {
   var password = req.body.password;
   var authenticated = authenticate(email, password);
   if (!authenticated) {
-    res.redirect("/register"); // res.sendStatus(403);
+    // if user is not authenticaded redirect him to the registration page (aka res.sendStatus(403))
+    res.redirect("/register");
   } else {
-    // res.cookie("registration", authenticated);
     req.session.userId = authenticated;
     res.redirect("/urls");
   }
